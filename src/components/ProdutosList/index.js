@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Anchor, Button, LoadingIcon } from "@nabstore/styleguide";
 import { defaultImages } from "@nabstore/utils";
-import { Card, ProdutosContainer, NoProdutosText } from "./styles";
+import { ProdutosContainer, NoProdutosText } from "./styles";
 import apiMethods from "../../services/api";
+import Card from "../Card";
 
 const ProdutosList = () => {
   const [produtos, setProdutos] = useState(undefined);

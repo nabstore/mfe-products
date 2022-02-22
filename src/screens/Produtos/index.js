@@ -6,6 +6,7 @@ import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import ProdutosList from "../../components/ProdutosList";
 import AddProdutoModal from "../../components/AddProdutoModal";
+import UltimasCompras from "../../components/UltimasCompras";
 
 const Produtos = () => {
   const user = useSelector((state) => state.user);
@@ -18,6 +19,8 @@ const Produtos = () => {
         handleClose={() => setIsCreateProductModalOpen(false)}
         showModal={isCreateProductModalOpen}
       />
+
+      <UltimasCompras />
 
       <div>
         <Typography.Title className="float-start">Produtos</Typography.Title>
