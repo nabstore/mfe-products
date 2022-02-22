@@ -15,22 +15,12 @@ const ProdutosList = () => {
       .catch((err) => console.error("Erro ao carregar produtos"));
   }, []);
 
-  const handleNextPage = () => {
+  const handleChangePage = (increment) => {
     apiMethods
-      .fetchProdutos(page + 1)
+      .fetchProdutos(page + increment)
       .then((resp) => {
         setProdutos(resp);
-        setPage(page + 1);
-      })
-      .catch((err) => console.error("Erro ao carregar produtos"));
-  };
-
-  const handlePreviousPage = () => {
-    apiMethods
-      .fetchProdutos(page - 1)
-      .then((resp) => {
-        setProdutos(resp);
-        setPage(page - 1);
+        setPage(page + increment);
       })
       .catch((err) => console.error("Erro ao carregar produtos"));
   };
@@ -44,38 +34,40 @@ const ProdutosList = () => {
   }
 
   return (
-    <ProdutosContainer className="d-flex flex-wrap mt-3">
-      {produtos.map((produto) => (
-        <Card className="card" key={produto.id}>
-          <img
-            src={apiMethods.getImageUrl(produto.id)}
-            className="card-img-top"
-            onError={(e) => (e.target.src = defaultImages.NO_IMAGE_URL)}
-            alt={produto.nome}
-          />
-          <div className="card-body">
-            <h5 className="card-title">{produto.nome}</h5>
-            <p className="card-text">
-              {produto.descricao?.length > 75
-                ? `${produto.descricao.slice(0, 75)}...`
-                : produto.descricao}
-            </p>
-          </div>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item d-flex justify-content-center">
-              <Anchor.Primary to={`/produto/${produto.id}`}>
-                Ver detalhes
-              </Anchor.Primary>
-            </li>
-          </ul>
-        </Card>
-      ))}
+    <div>
+      <ProdutosContainer className="d-flex flex-wrap mt-3">
+        {produtos.map((produto) => (
+          <Card className="card" key={produto.id}>
+            <img
+              src={apiMethods.getImageUrl(produto.id)}
+              className="card-img-top"
+              onError={(e) => (e.target.src = defaultImages.NO_IMAGE_URL)}
+              alt={produto.nome}
+            />
+            <div className="card-body">
+              <h5 className="card-title">{produto.nome}</h5>
+              <p className="card-text">
+                {produto.descricao?.length > 75
+                  ? `${produto.descricao.slice(0, 75)}...`
+                  : produto.descricao}
+              </p>
+            </div>
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item d-flex justify-content-center">
+                <Anchor.Primary to={`/produto/${produto.id}`}>
+                  Ver detalhes
+                </Anchor.Primary>
+              </li>
+            </ul>
+          </Card>
+        ))}
+      </ProdutosContainer>
 
       <div className="mt-5 mb-5 d-flex flex-row justify-content-center align-items-center">
         <Button.Primary
           margin="0 25px"
           width="150px"
-          onClick={handlePreviousPage}
+          onClick={() => handleChangePage(-1)}
           disabled={page <= 1}
         >
           Anterior
@@ -84,13 +76,13 @@ const ProdutosList = () => {
         <Button.Primary
           margin="0 25px"
           width="150px"
-          onClick={handleNextPage}
+          onClick={() => handleChangePage(1)}
           disabled={produtos && produtos.length < 10}
         >
           Próxima
         </Button.Primary>
       </div>
-    </ProdutosContainer>
+    </div>
   );
 };
 
