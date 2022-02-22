@@ -13,6 +13,15 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+const createProduto = async (formData) => {
+  const res = await api.post(`/produtos`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
 const fetchProdutos = async (page) => {
   const res = await api.get(`/produtos?page=${page ? page : 1}`);
   return res.data;
@@ -23,6 +32,7 @@ const getImageUrl = (produtoId) => {
 };
 
 const apiMethods = {
+  createProduto,
   fetchProdutos,
   getImageUrl,
 };
