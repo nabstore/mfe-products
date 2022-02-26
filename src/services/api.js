@@ -27,6 +27,20 @@ const fetchProdutos = async (page) => {
   return res.data;
 };
 
+const fetchProdutoById = async (id) => {
+  const res = await api.get(`/produtos/${id}`);
+  return res.data;
+};
+
+const deleteProduto = async (id) => {
+  const res = await api.delete(`/produtos/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res.data;
+};
+
 const getImageUrl = (produtoId) => {
   return `${process.env.API_BASE_URL}/produtos/${produtoId}/image`;
 };
@@ -37,12 +51,20 @@ const fetchCompras = async () => {
   const res = await api.get(`/compras`);
   return res.data;
 };
+
+const getEstimativaEntrega = async (cep) => {
+  const res = await api.get(`/entregas?cep=${cep}`);
+  return res.data;
+};
 // ******************* END *********************
 
 const apiMethods = {
   createProduto,
+  deleteProduto,
   fetchCompras,
+  fetchProdutoById,
   fetchProdutos,
+  getEstimativaEntrega,
   getImageUrl,
 };
 
