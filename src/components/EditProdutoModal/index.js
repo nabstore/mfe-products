@@ -1,39 +1,53 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { Modal } from "react-bootstrap";
 import { Button } from "@nabstore/styleguide";
 import apiMethods from "../../services/api";
+import { notification } from "antd";
 
-const AddProdutoModal = ({ showModal, handleClose }) => {
-  const navigate = useNavigate();
+const EditProdutoModal = ({ showModal, handleClose }) => {
   const [nome, setNome] = useState("");
   const [nomeError, setNomeError] = useState("");
   const [descricao, setDescricao] = useState("");
   const [preco, setPreco] = useState(0);
   const [estoque, setEstoque] = useState(0);
-  const [selectedFile, setSelectedFile] = useState();
-  const [imageError, setimageError] = useState("");
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const getProduto = async (id) => {
+    apiMethods
+      .fetchProdutoById(id)
+      .then((produto) => {
+        setNome(produto.nome);
+        setDescricao(produto.descricao);
+        setPreco(produto.preco);
+        setEstoque(produto.estoque);
+      })
+      .catch((error) => console.error("Erro ao carregar produto."));
+  };
+
+  useEffect(() => {
+    getProduto(id);
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-
-    if (!selectedFile) {
-      setimageError("Selecione uma imagem para o produto");
-      return;
-    }
-
-    formData.append("nome", nome);
-    formData.append("descricao", descricao);
-    formData.append("preco", preco);
-    formData.append("estoque", estoque);
-    formData.append("imagem", selectedFile, selectedFile.name);
-
     apiMethods
-      .createProduto(formData)
+      .editProduto({
+        id,
+        nome,
+        descricao,
+        preco,
+        estoque,
+      })
       .then((resp) => {
-        navigate(`/produto/${resp.id}`);
+        const args = {
+          message: "Prontinho =)",
+          description: "Produto editado com sucesso.",
+          duration: 2,
+        };
+        notification.success(args);
+        navigate(0);
       })
       .catch((err) => {
         if (err.response.status === 400) {
@@ -47,7 +61,7 @@ const AddProdutoModal = ({ showModal, handleClose }) => {
   return (
     <Modal show={showModal} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Adição de Produto</Modal.Title>
+        <Modal.Title>Edição de Produto</Modal.Title>
       </Modal.Header>
       <Modal.Body className="m-3">
         <form onSubmit={handleSubmit}>
@@ -96,23 +110,10 @@ const AddProdutoModal = ({ showModal, handleClose }) => {
             onChange={(e) => setEstoque(e.target.value)}
           />
 
-          <label className="mt-3 mb-1" htmlFor="imagem">
-            Imagem
-          </label>
-          <input
-            type="file"
-            id="imagem"
-            className={
-              imageError === "" ? "form-control" : "form-control is-invalid"
-            }
-            onChange={(e) => setSelectedFile(e.target.files[0])}
-          />
-          <div className="invalid-feedback">{imageError}</div>
-
           <Button.Secondary
-            disabled={nome === "" || descricao === "" || !selectedFile}
+            disabled={preco === "" || estoque === "" || nome === ""}
           >
-            Criar
+            Salvar
           </Button.Secondary>
         </form>
       </Modal.Body>
@@ -120,4 +121,4 @@ const AddProdutoModal = ({ showModal, handleClose }) => {
   );
 };
 
-export default AddProdutoModal;
+export default EditProdutoModal;

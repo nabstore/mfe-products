@@ -32,6 +32,16 @@ const fetchProdutoById = async (id) => {
   return res.data;
 };
 
+const editProduto = async ({ id, nome, descricao, preco, estoque }) => {
+  const res = await api.put(`/produtos/${id}`, {
+    nome,
+    descricao,
+    preco,
+    estoque,
+  });
+  return res.data;
+};
+
 const deleteProduto = async (id) => {
   const res = await api.delete(`/produtos/${id}`, {
     headers: {
@@ -61,6 +71,7 @@ const getEstimativaEntrega = async (cep) => {
 const apiMethods = {
   createProduto,
   deleteProduto,
+  editProduto,
   fetchCompras,
   fetchProdutoById,
   fetchProdutos,

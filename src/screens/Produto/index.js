@@ -24,6 +24,7 @@ import {
   DetailsTitle,
 } from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import EditProdutoModal from "../../components/EditProdutoModal";
 
 const Produto = ({ addProductToCartAction }) => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const Produto = ({ addProductToCartAction }) => {
   }));
   const [qtd, setQtd] = useState(1);
   const [produto, setProduto] = useState(undefined);
-  const [showModal, setShowModal] = useState(false);
+  const [isEditProdutoModalOpen, setIsEditProdutoModalOpen] = useState(false);
   const [entrega, setEntrega] = useState();
   const [cepEntrega, setCepEntrega] = useState("");
 
@@ -100,10 +101,10 @@ const Produto = ({ addProductToCartAction }) => {
 
   return (
     <div className="row align-items-center">
-      {/* <EditProduto
-        handleClose={() => setShowModal(false)}
-        showModal={showModal}
-      /> */}
+      <EditProdutoModal
+        handleClose={() => setIsEditProdutoModalOpen(false)}
+        showModal={isEditProdutoModalOpen}
+      />
       <div className="col">
         <div className="float-start">
           <Anchor.GoBack path="/" text="Voltar aos produtos" />
@@ -194,7 +195,7 @@ const Produto = ({ addProductToCartAction }) => {
                 <Button.Secondary
                   width="45%"
                   margin="0 10px"
-                  onClick={() => setShowModal(true)}
+                  onClick={() => setIsEditProdutoModalOpen(true)}
                 >
                   <FontAwesomeIcon className="me-2" icon={faEdit} />
                   Editar Produto
