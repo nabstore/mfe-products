@@ -107,7 +107,7 @@ const Produto = ({ addProductToCartAction }) => {
       />
       <div className="col">
         <div className="float-start">
-          <Anchor.GoBack path="/" text="Voltar aos produtos" />
+          <Anchor.GoBack path="/products" text="Voltar aos produtos" />
         </div>
       </div>
 

@@ -55,7 +55,7 @@ const ProdutosList = () => {
             </div>
             <ul className="list-group list-group-flush">
               <li className="list-group-item d-flex justify-content-center">
-                <Anchor.Primary to={`/produto/${produto.id}`}>
+                <Anchor.Primary to={`/products/${produto.id}`}>
                   Ver detalhes
                 </Anchor.Primary>
               </li>
