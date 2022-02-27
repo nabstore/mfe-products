@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Anchor, Button, LoadingIcon } from "@nabstore/styleguide";
 import { defaultImages } from "@nabstore/utils";
 import { ProdutosContainer, NoProdutosText } from "./styles";
+import { routes } from "@nabstore/utils";
 import apiMethods from "../../services/api";
 import Card from "../Card";
 
@@ -55,7 +56,7 @@ const ProdutosList = () => {
             </div>
             <ul className="list-group list-group-flush">
               <li className="list-group-item d-flex justify-content-center">
-                <Anchor.Primary to={`/products/${produto.id}`}>
+                <Anchor.Primary to={routes.PRODUTO.replace(":id", produto.id)}>
                   Ver detalhes
                 </Anchor.Primary>
               </li>

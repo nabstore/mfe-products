@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Anchor, Typography } from "@nabstore/styleguide";
 import { currencyFormatter } from "@nabstore/utils";
+import { routes } from "@nabstore/utils";
 import Card from "../Card";
 import apiMethods from "../../services/api";
 
@@ -38,7 +39,7 @@ const UltimasCompras = () => {
         <Typography.Title className="float-start">
           Últimas Compras
         </Typography.Title>
-        <Anchor.Primary className="ms-4" to={`/compras`}>
+        <Anchor.Primary className="ms-4" to={routes.COMPRAS}>
           Ver todas
         </Anchor.Primary>
       </div>
@@ -54,7 +55,7 @@ const UltimasCompras = () => {
             </div>
             <ul className="list-group list-group-flush">
               <li className="list-group-item d-flex justify-content-center">
-                <Anchor.Primary to={`/compras/${compra.id}`}>
+                <Anchor.Primary to={routes.COMPRA.replace(":id", compra.id)}>
                   Ver detalhes
                 </Anchor.Primary>
               </li>

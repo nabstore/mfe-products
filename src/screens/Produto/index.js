@@ -24,6 +24,7 @@ import {
   DetailsTitle,
 } from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { routes } from "@nabstore/utils";
 import EditProdutoModal from "../../components/EditProdutoModal";
 
 const Produto = ({ addProductToCartAction }) => {
@@ -64,7 +65,7 @@ const Produto = ({ addProductToCartAction }) => {
             duration: 2,
           };
           notification.success(args);
-          navigate("/");
+          navigate(routes.HOME);
         })
         .catch((error) => console.error("Erro ao deletar produto."));
     }
@@ -85,7 +86,7 @@ const Produto = ({ addProductToCartAction }) => {
       duration: 2,
     };
     notification.success(args);
-    navigate("/");
+    navigate(routes.HOME);
   };
 
   const handleEstimarEntrega = () => {
@@ -107,7 +108,7 @@ const Produto = ({ addProductToCartAction }) => {
       />
       <div className="col">
         <div className="float-start">
-          <Anchor.GoBack path="/products" text="Voltar aos produtos" />
+          <Anchor.GoBack path={routes.HOME} text="Voltar aos produtos" />
         </div>
       </div>
 
