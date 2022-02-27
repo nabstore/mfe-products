@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Modal } from "react-bootstrap";
 import { Button } from "@nabstore/styleguide";
+import { routes } from "@nabstore/utils";
 import apiMethods from "../../services/api";
 
 const AddProdutoModal = ({ showModal, handleClose }) => {
@@ -33,7 +34,7 @@ const AddProdutoModal = ({ showModal, handleClose }) => {
     apiMethods
       .createProduto(formData)
       .then((resp) => {
-        navigate(`/produto/${resp.id}`);
+        navigate(routes.PRODUTO.replace(":id", resp.id));
       })
       .catch((err) => {
         if (err.response.status === 400) {
