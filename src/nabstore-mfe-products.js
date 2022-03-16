@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import singleSpaReact from "single-spa-react";
 import App from "./App";
+import BestOffersFragment from "./fragments/BestOffersFragment/BestOffers";
 
 const lifecycles = singleSpaReact({
   React,
@@ -17,3 +18,4 @@ const lifecycles = singleSpaReact({
 });
 
 export const { bootstrap, mount, unmount } = lifecycles;
+export { BestOffersFragment };
