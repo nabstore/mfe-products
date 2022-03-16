@@ -32,6 +32,11 @@ const fetchProdutoById = async (id) => {
   return res.data;
 };
 
+const fetchOfertas = async () => {
+  const res = await api.get(`produtos/ofertas`);
+  return res.data;
+};
+
 const editProduto = async ({ id, nome, descricao, preco, estoque }) => {
   const res = await api.put(`/produtos/${id}`, {
     nome,
@@ -61,6 +66,7 @@ const apiMethods = {
   editProduto,
   fetchProdutoById,
   fetchProdutos,
+  fetchOfertas,
   getImageUrl,
 };
 
