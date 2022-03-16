@@ -48,18 +48,7 @@ const Estoque = styled.p`
   color: #7a7a7a;
 `;
 
-const ValorEntrega = styled.p`
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.04em;
-  color: green;
-`;
-
 export {
-  ValorEntrega,
   Card,
   Price,
   Estoque,

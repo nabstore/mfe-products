@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { notification } from "antd";
 import { Anchor, Button, Typography } from "@nabstore/styleguide";
+import { DeliveryEstimateFragment } from "@nabstore/mfe-checkout";
 import {
   tipoUsuario,
   currencyFormatter as currencyFormat,
@@ -12,12 +13,10 @@ import {
   faPlus,
   faMinus,
   faTrash,
-  faTruck,
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Card,
-  ValorEntrega,
   Price,
   Estoque,
   Details,
@@ -38,8 +37,6 @@ const Produto = ({ addProductToCartAction }) => {
   const [qtd, setQtd] = useState(1);
   const [produto, setProduto] = useState(undefined);
   const [isEditProdutoModalOpen, setIsEditProdutoModalOpen] = useState(false);
-  const [entrega, setEntrega] = useState();
-  const [cepEntrega, setCepEntrega] = useState("");
 
   useEffect(() => {
     apiMethods
@@ -87,13 +84,6 @@ const Produto = ({ addProductToCartAction }) => {
     };
     notification.success(args);
     navigate(routes.HOME);
-  };
-
-  const handleEstimarEntrega = () => {
-    apiMethods
-      .getEstimativaEntrega(cepEntrega)
-      .then((resp) => setEntrega(resp))
-      .catch((err) => console.error("Erro ao calcular entrega."));
   };
 
   if (!produto) {
@@ -207,46 +197,9 @@ const Produto = ({ addProductToCartAction }) => {
             )}
 
             <hr />
-            <div className="p-3 card-body ">
-              <DetailsTitle>Entrega</DetailsTitle>
-              <div className="p-3 card-body d-flex justify-content-center">
-                <input
-                  type="text"
-                  id="cepEntrega"
-                  className="form-control"
-                  placeholder="00000-000"
-                  value={cepEntrega}
-                  onChange={(e) => setCepEntrega(e.target.value)}
-                />
-                <Button.Primary
-                  width="45%"
-                  margin="0 10px"
-                  disabled={cepEntrega === ""}
-                  onClick={handleEstimarEntrega}
-                >
-                  Calcular frete
-                </Button.Primary>
-              </div>
-              {entrega && entrega.estimatedDeliveryDate ? (
-                <div className="ms-3 me-3 card-body d-flex justify-content-between align-items-emd">
-                  <Details>
-                    <FontAwesomeIcon className="me-2" icon={faTruck} />
-                    Previsão de entrega dia{" "}
-                    {new Date(
-                      entrega.estimatedDeliveryDate
-                    ).toLocaleDateString()}
-                    .
-                  </Details>
-                  <ValorEntrega>
-                    {entrega.preco === 0
-                      ? "Grátis"
-                      : currencyFormat(entrega.preco)}
-                  </ValorEntrega>
-                </div>
-              ) : (
-                <></>
-              )}
-            </div>
+            
+            <DeliveryEstimateFragment />
+
           </Card>
         </div>
       </div>
