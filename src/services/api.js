@@ -57,11 +57,6 @@ const getImageUrl = (produtoId) => {
 
 // **************** CHECKOUT ******************
 // TODO - Usar fragmentos do checkout
-const fetchCompras = async () => {
-  const res = await api.get(`/compras`);
-  return res.data;
-};
-
 const getEstimativaEntrega = async (cep) => {
   const res = await api.get(`/entregas?cep=${cep}`);
   return res.data;
@@ -72,7 +67,6 @@ const apiMethods = {
   createProduto,
   deleteProduto,
   editProduto,
-  fetchCompras,
   fetchProdutoById,
   fetchProdutos,
   getEstimativaEntrega,

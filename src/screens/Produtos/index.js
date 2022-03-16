@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { tipoUsuario } from "@nabstore/utils";
 import { Button, Typography } from "@nabstore/styleguide";
+import { LastPurchasesFragment } from "@nabstore/mfe-checkout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import ProdutosList from "../../components/ProdutosList";
 import AddProdutoModal from "../../components/AddProdutoModal";
-import UltimasCompras from "../../components/UltimasCompras";
 
 const Produtos = () => {
   const user = useSelector((state) => state.user);
@@ -20,7 +20,7 @@ const Produtos = () => {
         showModal={isCreateProductModalOpen}
       />
 
-      <UltimasCompras />
+      <LastPurchasesFragment />
 
       <div>
         <Typography.Title className="float-start">Produtos</Typography.Title>
