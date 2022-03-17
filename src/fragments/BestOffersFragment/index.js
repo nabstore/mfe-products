@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Typography } from "@nabstore/styleguide";
 import { currencyFormatter, defaultImages } from "@nabstore/utils";
 import { notification } from "antd";
-import Card from "../../../components/Card";
-import useGetOffers from "../../../hooks/useGetOffers";
-import apiMethods from "../../../services/api";
+import Card from "../../components/Card";
+import useGetOffers from "../../hooks/useGetOffers";
+import apiMethods from "../../services/api";
 
 const BestOffersFragment = ({ addProductToCart, cart }) => {
   const { data: ofertas, isLoading, error } = useGetOffers();

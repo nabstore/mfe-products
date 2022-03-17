@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import singleSpaReact from "single-spa-react";
 import App from "./App";
-import BestOffersFragment from "./fragments/BestOffersFragment/BestOffers";
+import BestOffersFragment from "./fragments/BestOffersFragment";
 
 const lifecycles = singleSpaReact({
   React,
