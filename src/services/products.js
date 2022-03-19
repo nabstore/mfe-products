@@ -57,10 +57,10 @@ const deleteProduto = async (id) => {
 };
 
 const getImageUrl = (produtoId) => {
-  return `${process.env.API_BASE_URL}/produtos/${produtoId}/image`;
+  return `${process.env.SERVICE_PRODUCTS_BASE_URL}/produtos/${produtoId}/image`;
 };
 
-const apiMethods = {
+const productsMethods = {
   createProduto,
   deleteProduto,
   editProduto,
@@ -70,4 +70,4 @@ const apiMethods = {
   getImageUrl,
 };
 
-export default apiMethods;
+export default productsMethods;

@@ -5,7 +5,7 @@ import { Button } from "@nabstore/styleguide";
 import apiMethods from "../../services/api";
 import { notification } from "antd";
 
-const EditProdutoModal = ({ showModal, handleClose }) => {
+const EditProdutoModal = ({ showModal, handleClose, produto }) => {
   const [nome, setNome] = useState("");
   const [nomeError, setNomeError] = useState("");
   const [descricao, setDescricao] = useState("");
@@ -14,20 +14,11 @@ const EditProdutoModal = ({ showModal, handleClose }) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const getProduto = async (id) => {
-    apiMethods
-      .fetchProdutoById(id)
-      .then((produto) => {
-        setNome(produto.nome);
-        setDescricao(produto.descricao);
-        setPreco(produto.preco);
-        setEstoque(produto.estoque);
-      })
-      .catch((error) => console.error("Erro ao carregar produto."));
-  };
-
   useEffect(() => {
-    getProduto(id);
+    setNome(produto.nome);
+    setDescricao(produto.descricao);
+    setPreco(produto.preco);
+    setEstoque(produto.estoque);
   }, [id]);
 
   const handleSubmit = (e) => {

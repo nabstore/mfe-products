@@ -28,6 +28,7 @@ const fetchProdutos = async (page) => {
 };
 
 const fetchProdutoById = async (id) => {
+  console.log(id, 'por')
   const res = await api.get(`/produtos/${id}`);
   return res.data;
 };

@@ -11,7 +11,7 @@ const useDeleteProduct = () => {
     productsMethods
       .deleteProduto(id)
       .then((resp) => {
-        setData(resp);
+        setData(true);
         setIsLoading(false);
         setError(undefined);
       })

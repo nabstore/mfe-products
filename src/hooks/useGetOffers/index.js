@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiMethods from "../../services/api";
+import productsMethods from "../../services/products";
 
 const useGetOffers = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -7,7 +7,7 @@ const useGetOffers = () => {
   const [error, setError] = useState(undefined);
 
   useEffect(() => {
-    apiMethods
+    productsMethods
       .fetchOfertas()
       .then((resp) => {
         setError(undefined);

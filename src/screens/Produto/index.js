@@ -7,6 +7,7 @@ import { DeliveryEstimateFragment } from "@nabstore/mfe-checkout";
 import {
   tipoUsuario,
   currencyFormatter as currencyFormat,
+  defaultImages,
 } from "@nabstore/utils";
 import productsMethods from "../../services/products";
 import {
@@ -123,6 +124,7 @@ const Produto = ({ addProductToCartAction }) => {
       <EditProdutoModal
         handleClose={() => setIsEditProdutoModalOpen(false)}
         showModal={isEditProdutoModalOpen}
+        produto={produto}
       />
       <div className="col">
         <div className="float-start">
@@ -134,7 +136,7 @@ const Produto = ({ addProductToCartAction }) => {
         <div className="col d-flex align-self-start mt-5 justify-content-center">
           <img
             src={productsMethods.getImageUrl(produto.id)}
-            onError={(e) => (e.target.src = NO_IMAGE_URL)}
+            onError={(e) => (e.target.src = defaultImages.NO_IMAGE_URL)}
             className="img-thumbnail"
             alt={produto.nome}
             width="80%"
