@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Modal } from "react-bootstrap";
-import { Button } from "@nabstore/styleguide";
-import apiMethods from "../../services/api";
+import { Button, LoadingIcon } from "@nabstore/styleguide";
 import { notification } from "antd";
+import useEditProduto from "../../hooks/useEditProduto";
 
 const EditProdutoModal = ({ showModal, handleClose, produto }) => {
   const [nome, setNome] = useState("");
@@ -13,6 +13,7 @@ const EditProdutoModal = ({ showModal, handleClose, produto }) => {
   const [estoque, setEstoque] = useState(0);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { editProduto, data, isLoading, error } = useEditProduto();
 
   useEffect(() => {
     setNome(produto.nome);
@@ -23,31 +24,30 @@ const EditProdutoModal = ({ showModal, handleClose, produto }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    apiMethods
-      .editProduto({
-        id,
-        nome,
-        descricao,
-        preco,
-        estoque,
-      })
-      .then((resp) => {
-        const args = {
-          message: "Prontinho =)",
-          description: "Produto editado com sucesso.",
-          duration: 2,
-        };
-        notification.success(args);
-        navigate(0);
-      })
-      .catch((err) => {
-        if (err.response.status === 400) {
-          setNomeError(err.response.data?.errors[0].message);
-        } else {
-          console.error("Erro ao criar produto", err);
-        }
-      });
+    editProduto(id, nome, descricao, preco, estoque);
   };
+
+  useEffect(() => {
+    if (data) {
+      const args = {
+        message: "Prontinho =)",
+        description: "Produto editado com sucesso.",
+        duration: 2,
+      };
+      notification.success(args);
+      navigate(0);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      if (error.status === 400) {
+        setNomeError(error.data?.errors[0].message);
+      } else {
+        console.error("Erro ao criar produto", error);
+      }
+    }
+  }, [error]);
 
   return (
     <Modal show={showModal} onHide={handleClose}>
@@ -104,7 +104,7 @@ const EditProdutoModal = ({ showModal, handleClose, produto }) => {
           <Button.Secondary
             disabled={preco === "" || estoque === "" || nome === ""}
           >
-            Salvar
+            {isLoading ? <LoadingIcon.Oval stroke="#2f2f2f" /> : "Salvar"}
           </Button.Secondary>
         </form>
       </Modal.Body>

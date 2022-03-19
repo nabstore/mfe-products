@@ -1,15 +1,21 @@
 import { useState } from "react";
 import productsMethods from "../../services/products";
 
-const useCreateProduto = () => {
+const useEditProduto = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(undefined);
   const [error, setError] = useState(undefined);
 
-  const createProduto = (formData) => {
+  const editProduto = (id, nome, descricao, preco, estoque) => {
     setIsLoading(true);
     productsMethods
-      .createProduto(formData)
+      .editProduto({
+        id,
+        nome,
+        descricao,
+        preco,
+        estoque,
+      })
       .then((resp) => {
         setData(resp);
         setIsLoading(false);
@@ -19,11 +25,11 @@ const useCreateProduto = () => {
         setData(undefined);
         setError(error.response);
         setIsLoading(false);
-        console.error("Erro ao criar produto.");
+        console.error("Erro ao editar produto.");
       });
   };
 
-  return { createProduto, data, isLoading, error };
+  return { editProduto, data, isLoading, error };
 };
 
-export default useCreateProduto;
+export default useEditProduto;
