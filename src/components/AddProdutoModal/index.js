@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Modal } from "react-bootstrap";
-import { Button } from "@nabstore/styleguide";
+import { Button, LoadingIcon } from "@nabstore/styleguide";
 import { routes } from "@nabstore/utils";
-import apiMethods from "../../services/api";
+import useCreateProduto from "../../hooks/useCreateProduto";
 
 const AddProdutoModal = ({ showModal, handleClose }) => {
   const navigate = useNavigate();
@@ -13,37 +13,36 @@ const AddProdutoModal = ({ showModal, handleClose }) => {
   const [preco, setPreco] = useState(0);
   const [estoque, setEstoque] = useState(0);
   const [selectedFile, setSelectedFile] = useState();
-  const [imageError, setimageError] = useState("");
+  const { createProduto, data, isLoading, error } = useCreateProduto();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-
-    if (!selectedFile) {
-      setimageError("Selecione uma imagem para o produto");
-      return;
-    }
-
     formData.append("nome", nome);
     formData.append("descricao", descricao);
     formData.append("preco", preco);
     formData.append("estoque", estoque);
     formData.append("imagem", selectedFile, selectedFile.name);
 
-    apiMethods
-      .createProduto(formData)
-      .then((resp) => {
-        navigate(routes.PRODUTO.replace(":id", resp.id));
-      })
-      .catch((err) => {
-        if (err.response.status === 400) {
-          setNomeError(err.response.data?.errors[0].message);
-        } else {
-          console.error("Erro ao criar produto", err);
-        }
-      });
+    createProduto(formData);
   };
+
+  useEffect(() => {
+    if (data) {
+      navigate(routes.PRODUTO.replace(":id", data.id));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      if (error.status === 400) {
+        setNomeError(error.data?.errors[0].message);
+      } else {
+        console.error("Erro ao criar produto", error);
+      }
+    }
+  }, [error]);
 
   return (
     <Modal show={showModal} onHide={handleClose}>
@@ -103,17 +102,13 @@ const AddProdutoModal = ({ showModal, handleClose }) => {
           <input
             type="file"
             id="imagem"
-            className={
-              imageError === "" ? "form-control" : "form-control is-invalid"
-            }
             onChange={(e) => setSelectedFile(e.target.files[0])}
           />
-          <div className="invalid-feedback">{imageError}</div>
 
           <Button.Secondary
             disabled={nome === "" || descricao === "" || !selectedFile}
           >
-            Criar
+            {isLoading ? <LoadingIcon.Oval stroke="#2f2f2f" /> : "Criar"}
           </Button.Secondary>
         </form>
       </Modal.Body>
