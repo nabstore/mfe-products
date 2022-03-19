@@ -2,29 +2,25 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { notification } from "antd";
-import { Anchor, Button, Typography } from "@nabstore/styleguide";
+import { Anchor, Button, LoadingIcon, Typography } from "@nabstore/styleguide";
 import { DeliveryEstimateFragment } from "@nabstore/mfe-checkout";
 import {
   tipoUsuario,
   currencyFormatter as currencyFormat,
 } from "@nabstore/utils";
-import apiMethods from "../../services/api";
+import productsMethods from "../../services/products";
 import {
   faPlus,
   faMinus,
   faTrash,
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  Card,
-  Price,
-  Estoque,
-  Details,
-  DetailsTitle,
-} from "./styles";
+import { Card, Price, Estoque, Details, DetailsTitle } from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { routes } from "@nabstore/utils";
 import EditProdutoModal from "../../components/EditProdutoModal";
+import useGetProduct from "../../hooks/useGetProduct";
+import useDeleteProduct from "../../hooks/useDeleteProduct";
 
 const Produto = ({ addProductToCartAction }) => {
   const { id } = useParams();
@@ -35,36 +31,54 @@ const Produto = ({ addProductToCartAction }) => {
     cart: state.cart,
   }));
   const [qtd, setQtd] = useState(1);
-  const [produto, setProduto] = useState(undefined);
   const [isEditProdutoModalOpen, setIsEditProdutoModalOpen] = useState(false);
+  const {
+    data: produto,
+    error: getProductError,
+    isLoading: isLoadingProduct,
+  } = useGetProduct(id);
+  const {
+    deleteProduct,
+    data: deleteResult,
+    error: deleteError,
+    isLoading: isLoadingDelete,
+  } = useDeleteProduct();
 
   useEffect(() => {
-    apiMethods
-      .fetchProdutoById(id)
-      .then((produto) => {
-        setProduto(produto);
-        const prod = cart.produtos.find((prod) => prod.id === produto.id);
-        if (prod) {
-          setQtd(prod.qtd);
-        }
-      })
-      .catch((error) => console.error("Erro ao carregar produto."));
-  }, [id, cart]);
+    if (produto) {
+      const prod = cart.produtos.find((prod) => prod.id === produto.id);
+      if (prod) {
+        setQtd(prod.qtd);
+      }
+    }
+  }, [produto, cart]);
+
+  useEffect(() => {
+    if (deleteError) {
+      const args = {
+        message: "Ops =(",
+        description: "Erro ao deletar produto.",
+        duration: 2,
+      };
+      notification.error(args);
+    }
+  }, [deleteError]);
+
+  useEffect(() => {
+    if (deleteResult) {
+      const args = {
+        message: "Prontinho =)",
+        description: "Produto deletado com sucesso.",
+        duration: 2,
+      };
+      notification.success(args);
+      navigate(routes.HOME);
+    }
+  }, [deleteResult]);
 
   const handleDelete = () => {
     if (window.confirm("Deseja deletar o produto?")) {
-      apiMethods
-        .deleteProduto(id)
-        .then((produto) => {
-          const args = {
-            message: "Prontinho =)",
-            description: "Produto deletado com sucesso.",
-            duration: 2,
-          };
-          notification.success(args);
-          navigate(routes.HOME);
-        })
-        .catch((error) => console.error("Erro ao deletar produto."));
+      deleteProduct(id);
     }
   };
 
@@ -86,8 +100,22 @@ const Produto = ({ addProductToCartAction }) => {
     navigate(routes.HOME);
   };
 
-  if (!produto) {
-    return <div>Carregando dados do produto...</div>;
+  if (getProductError) {
+    return (
+      <div className="d-flex flex-column align-items-center">
+        <Typography.Subtitle>
+          Erro ao carregar dados do produto.
+        </Typography.Subtitle>
+      </div>
+    );
+  }
+
+  if (isLoadingProduct || !produto) {
+    return (
+      <div className="d-flex flex-column align-items-center">
+        <LoadingIcon.Oval className="mt-5" stroke="#2f2f2f" />
+      </div>
+    );
   }
 
   return (
@@ -105,7 +133,7 @@ const Produto = ({ addProductToCartAction }) => {
       <div className="row align-items-center mt-3 mb-5">
         <div className="col d-flex align-self-start mt-5 justify-content-center">
           <img
-            src={apiMethods.getImageUrl(produto.id)}
+            src={productsMethods.getImageUrl(produto.id)}
             onError={(e) => (e.target.src = NO_IMAGE_URL)}
             className="img-thumbnail"
             alt={produto.nome}
@@ -180,8 +208,14 @@ const Produto = ({ addProductToCartAction }) => {
                   margin="0 10px"
                   onClick={handleDelete}
                 >
-                  <FontAwesomeIcon className="me-2" icon={faTrash} />
-                  Excluir Produto
+                  {isLoadingDelete ? (
+                    <LoadingIcon.Oval stroke="#2f2f2f" />
+                  ) : (
+                    <>
+                      <FontAwesomeIcon className="me-2" icon={faTrash} />
+                      Excluir Produto
+                    </>
+                  )}
                 </Button.Danger>
                 <Button.Secondary
                   width="45%"
@@ -197,9 +231,8 @@ const Produto = ({ addProductToCartAction }) => {
             )}
 
             <hr />
-            
-            <DeliveryEstimateFragment />
 
+            <DeliveryEstimateFragment />
           </Card>
         </div>
       </div>
