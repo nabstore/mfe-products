@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "@nabstore/utils";
 
 const api = axios.create({
-  baseURL: process.env.API_BASE_URL,
+  baseURL: process.env.SERVICE_PRODUCTS_BASE_URL,
 });
 
 api.interceptors.request.use(async (config) => {
@@ -28,7 +28,6 @@ const fetchProdutos = async (page) => {
 };
 
 const fetchProdutoById = async (id) => {
-  console.log(id, 'por')
   const res = await api.get(`/produtos/${id}`);
   return res.data;
 };
@@ -58,10 +57,10 @@ const deleteProduto = async (id) => {
 };
 
 const getImageUrl = (produtoId) => {
-  return `${process.env.API_BASE_URL}/produtos/${produtoId}/image`;
+  return `${process.env.SERVICE_PRODUCTS_BASE_URL}/produtos/${produtoId}/image`;
 };
 
-const apiMethods = {
+const productsMethods = {
   createProduto,
   deleteProduto,
   editProduto,
@@ -71,4 +70,4 @@ const apiMethods = {
   getImageUrl,
 };
 
-export default apiMethods;
+export default productsMethods;

@@ -1,34 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { Anchor, Button, LoadingIcon } from "@nabstore/styleguide";
+import React from "react";
+import { Anchor, Button, LoadingIcon, Typography } from "@nabstore/styleguide";
 import { defaultImages } from "@nabstore/utils";
 import { ProdutosContainer, NoProdutosText } from "./styles";
 import { routes } from "@nabstore/utils";
-import apiMethods from "../../services/api";
+import productsMethods from "../../services/products";
 import Card from "../Card";
+import useGetProducts from "../../hooks/useGetProducts";
 
 const ProdutosList = () => {
-  const [produtos, setProdutos] = useState(undefined);
-  const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    apiMethods
-      .fetchProdutos()
-      .then((resp) => setProdutos(resp))
-      .catch((err) => console.error("Erro ao carregar produtos"));
-  }, []);
+  const {
+    changeProductsPage,
+    data: produtos,
+    page,
+    isLoading,
+    error,
+  } = useGetProducts();
 
   const handleChangePage = (increment) => {
-    apiMethods
-      .fetchProdutos(page + increment)
-      .then((resp) => {
-        setProdutos(resp);
-        setPage(page + increment);
-      })
-      .catch((err) => console.error("Erro ao carregar produtos"));
+    changeProductsPage(increment);
   };
 
-  if (!produtos) {
-    return <LoadingIcon.Oval className="mt-5" stroke="#2f2f2f" />;
+  if (error) {
+    return (
+      <div className="d-flex flex-column align-items-center">
+        <Typography.Subtitle>Erro ao carregar produtos.</Typography.Subtitle>
+      </div>
+    );
+  }
+
+  if (isLoading || !produtos) {
+    return (
+      <div className="d-flex flex-column align-items-center">
+        <LoadingIcon.Oval className="mt-5" stroke="#2f2f2f" />
+      </div>
+    );
   }
 
   if (produtos.length === 0) {
@@ -41,7 +46,7 @@ const ProdutosList = () => {
         {produtos.map((produto) => (
           <Card className="card" key={produto.id}>
             <img
-              src={apiMethods.getImageUrl(produto.id)}
+              src={productsMethods.getImageUrl(produto.id)}
               className="card-img-top"
               onError={(e) => (e.target.src = defaultImages.NO_IMAGE_URL)}
               alt={produto.nome}

@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Typography } from "@nabstore/styleguide";
 import { currencyFormatter, defaultImages } from "@nabstore/utils";
 import { notification } from "antd";
-import Card from "../../../components/Card";
-import useGetOffers from "../../../hooks/useGetOffers";
-import apiMethods from "../../../services/api";
+import Card from "../../components/Card";
+import useGetOffers from "../../hooks/useGetOffers";
+import productsMethods from "../../services/products";
 
 const BestOffersFragment = ({ addProductToCart, cart }) => {
   const { data: ofertas, isLoading, error } = useGetOffers();
@@ -47,7 +47,7 @@ const BestOffersFragment = ({ addProductToCart, cart }) => {
         {ofertas.map((produto) => (
           <Card style={{ width: "16rem" }} className="card" key={produto.id}>
             <img
-              src={apiMethods.getImageUrl(produto.id)}
+              src={productsMethods.getImageUrl(produto.id)}
               className="card-img-top"
               onError={(e) => (e.target.src = defaultImages.NO_IMAGE_URL)}
               alt={produto.nome}

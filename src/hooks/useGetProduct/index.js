@@ -1,28 +1,29 @@
 import { useEffect, useState } from "react";
 import productsMethods from "../../services/products";
 
-const useGetOffers = () => {
-  const [isLoading, setIsLoading] = useState(true);
+const useGetProduct = (id) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(undefined);
   const [error, setError] = useState(undefined);
 
   useEffect(() => {
+    setIsLoading(true);
     productsMethods
-      .fetchOfertas()
-      .then((resp) => {
-        setError(undefined);
-        setData(resp);
+      .fetchProdutoById(id)
+      .then((produto) => {
+        setData(produto);
         setIsLoading(false);
+        setError(undefined);
       })
       .catch((error) => {
-        setError(error);
         setData(undefined);
+        setError(error.response);
         setIsLoading(false);
-        console.error("Erro ao carregar ofertas");
+        console.error("Erro ao carregar produto.");
       });
   }, []);
 
   return { data, isLoading, error };
 };
 
-export default useGetOffers;
+export default useGetProduct;
