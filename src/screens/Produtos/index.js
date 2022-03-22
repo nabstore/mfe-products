@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { tipoUsuario } from "@nabstore/utils";
 import { Button, Typography } from "@nabstore/styleguide";
 import { LastPurchasesFragment } from "@nabstore/mfe-checkout";
+import { isAuthenticated } from "@nabstore/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
@@ -24,7 +25,7 @@ const Produtos = () => {
 
       <div>
         <Typography.Title className="float-start">Produtos</Typography.Title>
-        {user.tipoUsuarioId === tipoUsuario.COLABORADOR ? (
+        {isAuthenticated() && user.tipoUsuarioId === tipoUsuario.COLABORADOR ? (
           <div className="float-end">
             <Button.Primary onClick={() => setIsCreateProductModalOpen(true)}>
               <FontAwesomeIcon className="me-2" icon={faPlusCircle} />

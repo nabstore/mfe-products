@@ -5,6 +5,7 @@ import { notification } from "antd";
 import { Anchor, Button, LoadingIcon, Typography } from "@nabstore/styleguide";
 import { DeliveryEstimateFragment } from "@nabstore/mfe-checkout";
 import {
+  isAuthenticated,
   tipoUsuario,
   currencyFormatter as currencyFormat,
   defaultImages,
@@ -203,7 +204,7 @@ const Produto = ({ addProductToCartAction }) => {
               <DetailsTitle>Detalhes do Produto</DetailsTitle>
               <Details>{produto.descricao}</Details>
             </div>
-            {user.tipoUsuarioId === tipoUsuario.COLABORADOR ? (
+            {isAuthenticated() && user.tipoUsuarioId === tipoUsuario.COLABORADOR ? (
               <div className="card-body d-flex justify-content-center">
                 <Button.Danger
                   width="45%"
